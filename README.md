@@ -6,7 +6,8 @@
 > This application is designed to record and analyze search queries entered by users in real-time. It includes a simple backend built with Ruby on Rails and a Vanilla JS frontend.
 
 Loom video demonstrating functionality
-[Loom Video](https://www.loom.com/share/1eb7a6d9163a45b09b038aca72e89f45)
+- [Loom Video](https://www.loom.com/share/1eb7a6d9163a45b09b038aca72e89f45)
+- Link to live app in Heroku [here](https://evening-falls-77225-4bff237a7b19.herokuapp.com/)
 
 
 ## Getting Started
