@@ -16,7 +16,19 @@
     function handleSearch() {
       const query = searchBox.value.trim();
       console.log(query)
-    }
+      fetch('/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Search results from the Rails backend:', data);
+      })
+      .catch(error => console.error('Error:', error));
+  }
 
   });
 </script>
