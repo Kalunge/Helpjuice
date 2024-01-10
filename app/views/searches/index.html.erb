@@ -1,34 +1,163 @@
-<!-- app/views/searches/index.html.erb -->
+<!DOCTYPE html>
+<html lang="en">
 
-<div>
-  <h1>Search Box</h1>
-  <input type="text" id="search-box" placeholder="search here...">
-  <div id="search-results">search results goes here</div>
-</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Box</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
+    div {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #search-box {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    #search-results {
+      margin-top: 20px;
+      color: #555;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 8px 0;
+      color: #333;
+    }
+
+    #show-all-searches {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #all-searches {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>Search Box</h1>
+    <input type="text" id="search-box" placeholder="Search here...">
+    <div id="search-results"></div>
+    <button id="show-all-searches">Show Analytics</button>
+    <div id="all-searches"></div>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
     const searchBox = document.getElementById('search-box');
     const searchResults = document.getElementById('search-results');
+    let currentSearch = '';
+
+    const showAllSearchesButton = document.getElementById('show-all-searches');
+    const allSearchesContainer = document.getElementById('all-searches');
 
     searchBox.addEventListener('input', handleSearch);
+    showAllSearchesButton.addEventListener('click', fetchAllSearches);
 
     function handleSearch() {
       const query = searchBox.value.trim();
-      console.log(query)
-      fetch('/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Search results from the Rails backend:', data);
-      })
-      .catch(error => console.error('Error:', error));
-  }
+      currentSearch = query;
+      console.log(query);
 
+      searchResults.innerHTML = `<p>${currentSearch}</p>`;
+    }
+
+    function fetchAllSearches() {
+      fetch('/searches/all_searches')
+        .then(response => response.json())
+        .then(data => {
+          console.log('All searches:', data);
+          displayAllSearches(data.searches);
+        })
+        .catch(error => console.error('Error fetching all searches:', error));
+    }
+
+    function sendSearchQuery(query) {
+      fetch('/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Search results successfully logged', data);
+          if (data.results.length > 0) {
+            const results = data.results.map(result => `<li>${result.query}</li>`).join('');
+            searchResults.innerHTML += `<ul>${results}</ul>`;
+          } else {
+            searchResults.innerHTML += `<p>No results found</p>`;
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function handleDebouncedSearch() {
+      if (currentSearch.trim() !== '') {
+        sendSearchQuery(currentSearch);
+      }
+    }
+
+    function displayAllSearches(searches) {
+      const searchesHtml = searches.map(search => `<li>${search.query}</li>`).join('');
+      allSearchesContainer.innerHTML = `<ul>${searchesHtml}</ul>`;
+    }
+
+    const debouncedSearch = debounce(handleDebouncedSearch, 300);
+
+    searchBox.addEventListener('input', debouncedSearch);
+
+    function debounce(func, delay) {
+      let timeout;
+      return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func.apply(context, args);
+        }, delay);
+      };
+    }
   });
 </script>
+</body>
+</html>
