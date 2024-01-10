@@ -1,0 +1,22 @@
+<!-- app/views/searches/index.html.erb -->
+
+<div>
+  <h1>Search Box</h1>
+  <input type="text" id="search-box" placeholder="search here...">
+  <div id="search-results">search results goes here</div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchBox = document.getElementById('search-box');
+    const searchResults = document.getElementById('search-results');
+
+    searchBox.addEventListener('input', handleSearch);
+
+    function handleSearch() {
+      const query = searchBox.value.trim();
+      console.log(query)
+    }
+
+  });
+</script>
