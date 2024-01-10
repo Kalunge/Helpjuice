@@ -93,7 +93,6 @@
     function handleSearch() {
       const query = searchBox.value.trim();
       currentSearch = query;
-      console.log(query);
 
       searchResults.innerHTML = `<p>${currentSearch}</p>`;
     }
@@ -102,7 +101,6 @@
       fetch('/searches/all_searches')
         .then(response => response.json())
         .then(data => {
-          console.log('All searches:', data);
           displayAllSearches(data.searches);
         })
         .catch(error => console.error('Error fetching all searches:', error));
@@ -120,7 +118,6 @@
       })
         .then(response => response.json())
         .then(data => {
-          console.log('Search results successfully logged', data);
           if (data.results.length > 0) {
             const results = data.results.map(result => `<li>${result.query}</li>`).join('');
             searchResults.innerHTML += `<ul>${results}</ul>`;
