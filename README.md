@@ -1,4 +1,7 @@
 # Search Analytics App
+![Screenshot 2024-01-10 at 19 52 39](https://github.com/Kalunge/Helpjuice/assets/50773868/a1230272-0682-49b9-b0e9-21edc0e14e46)
+
+
 
 > This application is designed to record and analyze search queries entered by users in real-time. It includes a simple backend built with Ruby on Rails and a Vanilla JS frontend.
 
@@ -23,6 +26,12 @@ cd search-analytics-app
 ```sh
 bundle install
 ```
+## Run tests
+```
+bundle exec rspec
+```
+<img width="556" alt="Screenshot 2024-01-10 at 19 47 44" src="https://github.com/Kalunge/Helpjuice/assets/50773868/4a80a079-302e-4232-accd-a335a8a4b0ff">
+
 ## Set up the database:
 ```
 rails db:create
